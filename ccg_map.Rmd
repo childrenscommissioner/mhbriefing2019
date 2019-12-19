@@ -31,11 +31,28 @@ overall_sc$ccg_cd[!overall_sc$ccg_cd %in% map$ccg18cd]
 
 for(i in c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","overall_score")){
   
+  if(!grepl("spend",i)){
+  
   vNm<-rlang::sym(paste0(i,"_fill"))
   v1<-rlang::sym(i)
   
   overall_sc<-overall_sc %>%
     mutate(!!vNm:=scales::rescale(!!v1,c(0,1)))
+  
+  }else{
+      
+      vNm<-rlang::sym(paste0(i,"_fill"))
+  v1<-rlang::sym(i)
+  
+  overall_sc<-overall_sc %>%
+    mutate(!!vNm:=factor(ifelse(spend_YP< 30, "£10 to £30", 
+                            ifelse(spend_YP< 50,"£30 to 50", 
+                              ifelse(spend_YP< 70,"£50 to £70",
+                                ifelse(spend_YP< 90,"£70 to £90","£90+")))),
+      levels=c("£10 to £30","£30 to 50","£50 to £70","£70 to £90","£90+"))) 
+
+      
+    }
   
   
 }
@@ -53,13 +70,14 @@ require(ggplot2)
 require(RColorBrewer)
 
 pal <- colorNumeric("viridis", domain = c(0,1))
+pal_bin<-colorFactor("viridis", levels = levels(overall_sc$spend_YP_fill))
 
 labels <- lapply(list("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","overall_score"), 
                  function(x){
                    
                    if(grepl("perc",x)){
                      paste0("<strong>", map$ccg18nm, "</strong><br/>", outcomes$lb[outcomes$var==x],": ",
-                            round(map@data[,x],4)*100)
+                            round(map@data[,x],3)*100)
                      
                    }else{
                      paste0("<strong>", map$ccg18nm, "</strong><br/>", outcomes$lb[outcomes$var==x],": ",
@@ -106,7 +124,7 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
               label =labels[["perc_access"]],group="% of children referred to CAMHS") %>%
   
   addPolygons(color="#444444", weight=1, smoothFactor = 0.5,
-              opacity=1.0, fillOpacity = 0.7, fillColor = ~pal(spend_YP_fill),
+              opacity=1.0, fillOpacity = 0.7, fillColor = ~pal_bin(spend_YP_fill),
               popupOptions = highlightOptions(bringToFront = T, weight=4),
               label =labels[["spend_YP"]],group="CAMHS spend per child") %>%
   
@@ -128,7 +146,12 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
             title = "Title",
             na.label = "Missing/excluded",
             opacity = 0.7
-  ) 
+  ) %>%
+  addLegend("topleft", pal = pal_bin, values=c("£10 to £30","£30 to 50","£50 to £70","£70 to £90","£90+"),
+            title = "Title",
+            na.label = "Missing/excluded",
+            opacity = 0.7
+  )
 
 ```
 
@@ -219,6 +242,10 @@ var legend_1 = document.getElementsByClassName("info legend leaflet-control")[0]
 
   legendTitle_1[0].innerHTML = varArr[0]
 
+  var legend_2 = document.getElementsByClassName("info legend leaflet-control")[1]
+
+  legend_2.style.display = "none"
+
 f3 = function(){
 
   var minVal_var = this.getAttribute("minval_map")
@@ -227,8 +254,15 @@ f3 = function(){
 
   var varval_var = this.getAttribute("varval_map")
 
+  if(varval_var != "CAMHS spend per child") {
 
+  var legend_2 = document.getElementsByClassName("info legend leaflet-control")[1]
+
+  legend_2.style.display = "none"
+  
   var legend = document.getElementsByClassName("info legend leaflet-control")[0]
+
+ legend.style.display = "initial"
 
   var legendTitle = legend.getElementsByTagName("strong")
 
@@ -243,6 +277,24 @@ f3 = function(){
   legEntries[legEntries.length - 1].innerHTML = maxVal_var
 
   legEntries[legEntries.length - 1].setAttribute("dx",50)
+
+
+  } else{
+  
+  var legend_2 = document.getElementsByClassName("info legend leaflet-control")[0]
+
+  legend_2.style.display = "none"
+  
+  var legend = document.getElementsByClassName("info legend leaflet-control")[1]
+
+  legend.style.display = "initial"
+
+  var legendTitle = legend.getElementsByTagName("strong")
+
+  legendTitle[0].innerHTML = varval_var
+
+
+  }
 
   }
 
