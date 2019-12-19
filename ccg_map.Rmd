@@ -41,23 +41,21 @@ for(i in c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","over
   overall_sc<-overall_sc %>%
     mutate(!!vNm:=scales::rescale(!!v1,c(0,1)))
   
-  }else{
-      
-      vNm<-rlang::sym(paste0(i,"_fill"))
-  v1<-rlang::sym(i)
+  }
   
-  overall_sc<-overall_sc %>%
-    mutate(!!vNm:=factor(ifelse(spend_YP< 30, "\\xA310 to \\xA330", 
-                            ifelse(spend_YP< 50,"\\xA330 to \\xA350", 
-                              ifelse(spend_YP< 70,"\\xA350 to \\xA370",
-                                ifelse(spend_YP< 90,"\\xA370 to \\xA390","\\xA390+")))),
-      levels=c("\\xA310 to \\xA330","\\xA330 to \\xA350","\\xA350 to \\xA370","\\xA370 to \\xA390","\\xA390+"))) 
-
       
-    }
+   
   
   
 }
+
+overall_sc<-overall_sc %>%
+    mutate(spend_YP_fill=factor(knitr::asis_output(ifelse(spend_YP< 30, "\xA310 to \xA330", 
+                            ifelse(spend_YP< 50,"\xA330 to \xA350", 
+                              ifelse(spend_YP< 70,"\xA350 to \xA370",
+                                ifelse(spend_YP< 90,"\xA370 to \xA390","\xA390+"))))),
+      levels=knitr::asis_output(c("\xA310 to \xA330","\xA330 to \xA350","\xA350 to \xA370","\xA370 to \xA390","\xA390+"))))
+
 
 # change from British standard to GPS format 
 map <- spTransform(map, "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
@@ -149,7 +147,7 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
             na.label = "Missing/excluded",
             opacity = 0.7
   ) %>%
-  addLegend("topleft", pal = pal_bin, values=c("\\xA310 to \\xA330","\\xA330 to \\xA350","\\xA350 to \\xA370","\\xA370 to \\xA390","\\xA390+"),
+  addLegend("topleft", pal = pal_bin, values=knitr::asis_output(c("\xA310 to \xA330","\xA330 to \xA350","\xA350 to \xA370","\xA370 to \xA390","\xA390+")),
             title = "Title",
             na.label = "Missing/excluded",
             opacity = 0.7
