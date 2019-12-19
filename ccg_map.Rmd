@@ -63,7 +63,7 @@ map <- spTransform(map, "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
 map <- sp::merge(map,overall_sc, by.x="ccg18cd", by.y="ccg_cd")
 
 outcomes<-data.frame(var=c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","overall_score"),
-                     lb=c("% of CCG budget spent on CAMHS","Spend per child (£) on CAMHS","% of children referred to CAMHS",
+                     lb=c("% of CCG budget spent on CAMHS","Spend per child (&#163) on CAMHS","% of children referred to CAMHS",
                           "Average waiting time (days)","% of CAMHS referrals closed before treatment","CCG overall score"),stringsAsFactors = F)
 
 require(ggplot2)
