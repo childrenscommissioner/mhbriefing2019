@@ -116,7 +116,7 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
               label =labels[["perc_budget"]],group="% of CCG budget spent on CAMHS") %>%
   
   addLayersControl(
-    baseGroups = c("CCG overall score","% of referrals closed</br>without treatment","Average CAMHS waiting time (days)","% of children referred to CAMHS","CAMHS spend per child","% of CCG budget spent on CAMHS"),
+    baseGroups = c("CCG overall score","% of referrals closed without treatment","Average CAMHS waiting time (days)","% of children referred to CAMHS","CAMHS spend per child","% of CCG budget spent on CAMHS"),
     options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend("topleft", pal = pal, values = seq(0,1),bins=5,
             labFormat = function(type, cuts, p) { 
