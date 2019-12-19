@@ -50,11 +50,11 @@ for(i in c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","over
 }
 
 overall_sc<-overall_sc %>%
-    mutate(spend_YP_fill=factor(knitr::asis_output(ifelse(spend_YP< 30, "\xA310 to \xA330", 
-                            ifelse(spend_YP< 50,"\xA330 to \xA350", 
-                              ifelse(spend_YP< 70,"\xA350 to \xA370",
-                                ifelse(spend_YP< 90,"\xA370 to \xA390","\xA390+"))))),
-      levels=knitr::asis_output(c("\xA310 to \xA330","\xA330 to \xA350","\xA350 to \xA370","\xA370 to \xA390","\xA390+"))))
+    mutate(spend_YP_fill=factor(knitr::asis_output(ifelse(spend_YP< 30, "&pound;10 to &pound;30", 
+                            ifelse(spend_YP< 50,"&pound;30 to &pound;50", 
+                              ifelse(spend_YP< 70,"&pound;50 to &pound;70",
+                                ifelse(spend_YP< 90,"&pound;70 to &pound;90","&pound;90+"))))),
+      levels=knitr::asis_output(c("&pound;10 to &pound;30","&pound;30 to &pound;50","&pound;50 to &pound;70","&pound;70 to &pound;90","&pound;90+"))))
 
 
 # change from British standard to GPS format 
@@ -147,7 +147,7 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
             na.label = "Missing/excluded",
             opacity = 0.7
   ) %>%
-  addLegend("topleft", pal = pal_bin, values=knitr::asis_output(c("\xA310 to \xA330","\xA330 to \xA350","\xA350 to \xA370","\xA370 to \xA390","\xA390+")),
+  addLegend("topleft", pal = pal_bin, values=knitr::asis_output(c("&pound;10 to &pound;30","&pound;30 to &pound;50","&pound;50 to &pound;70","&pound;70 to &pound;90","&pound;90+")),
             title = "Title",
             na.label = "Missing/excluded",
             opacity = 0.7
