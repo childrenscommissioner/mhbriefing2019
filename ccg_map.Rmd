@@ -45,11 +45,11 @@ for(i in c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","over
   v1<-rlang::sym(i)
   
   overall_sc<-overall_sc %>%
-    mutate(!!vNm:=factor(ifelse(spend_YP< 30, "&#16310 to &#16330", 
-                            ifelse(spend_YP< 50,"&#16330 to 50", 
-                              ifelse(spend_YP< 70,"&#16350 to &#16370",
-                                ifelse(spend_YP< 90,"&#16370 to &#16390","&#16390+")))),
-      levels=c("&#16310 to &#16330","&#16330 to 50","&#16350 to &#16370","&#16370 to &#16390","&#16390+"))) 
+    mutate(!!vNm:=factor(ifelse(spend_YP< 30, "£10 to £30", 
+                            ifelse(spend_YP< 50,"£30 to £50", 
+                              ifelse(spend_YP< 70,"£50 to £70",
+                                ifelse(spend_YP< 90,"£70 to £90","£90+")))),
+      levels=c("£10 to £30","£30 to 50","£50 to £70","£70 to £90","£90+"))) 
 
       
     }
@@ -63,7 +63,7 @@ map <- spTransform(map, "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
 map <- sp::merge(map,overall_sc, by.x="ccg18cd", by.y="ccg_cd")
 
 outcomes<-data.frame(var=c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","overall_score"),
-                     lb=c("% of CCG budget spent on CAMHS","Spend per child (&#163) on CAMHS","% of children referred to CAMHS",
+                     lb=c("% of CCG budget spent on CAMHS","Spend per child (£) on CAMHS","% of children referred to CAMHS",
                           "Average waiting time (days)","% of CAMHS referrals closed before treatment","CCG overall score"),stringsAsFactors = F)
 
 require(ggplot2)
@@ -147,7 +147,7 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
             na.label = "Missing/excluded",
             opacity = 0.7
   ) %>%
-  addLegend("topleft", pal = pal_bin, values=c("&#16310 to &#16330","&#16330 to 50","&#16350 to &#16370","&#16370 to &#16390","&#16390+"),
+  addLegend("topleft", pal = pal_bin, values=c("£10 to £30","£30 to 50","£50 to £70","£70 to £90","£90+"),
             title = "Title",
             na.label = "Missing/excluded",
             opacity = 0.7
@@ -166,7 +166,7 @@ minVals<-sapply(c("overall_score","perc_closed","avg_wait","perc_access","spend_
       paste0(min(overall_sc[,x]))
        
     }else if(x=="spend_YP"){
-       paste0("&#163",min(overall_sc[,x]))
+       paste0("£",min(overall_sc[,x]))
     }else{
        
       paste0(min(overall_sc[,x]))
@@ -184,7 +184,7 @@ maxVals<-sapply(c("overall_score","perc_closed","avg_wait","perc_access","spend_
       paste0(max(overall_sc[,x]))
        
     }else if(x=="spend_YP"){
-       paste0("&#163",max(overall_sc[,x]))
+       paste0("£",max(overall_sc[,x]))
     }else{
        
       paste0(max(overall_sc[,x]))
