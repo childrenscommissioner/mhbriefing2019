@@ -15,6 +15,8 @@ require(rmapshaper)
 require(leaflet)
 require(dplyr)
 
+options(encoding = "UTF-8")
+
 map <- readOGR(dsn = "//shestorfs01/Childrens Commissioner/2. Evidence Team/1. Live Projects/MH Briefing 2019/R files/CCG_shape2018")
 map <- rmapshaper :: ms_simplify(map,keep=0.1)
 
@@ -49,7 +51,7 @@ for(i in c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","over
                             ifelse(spend_YP< 50,"£30 to £50", 
                               ifelse(spend_YP< 70,"£50 to £70",
                                 ifelse(spend_YP< 90,"£70 to £90","£90+")))),
-      levels=c("£10 to £30","£30 to 50","£50 to £70","£70 to £90","£90+"))) 
+      levels=c("£10 to £30","£30 to £50","£50 to £70","£70 to £90","£90+"))) 
 
       
     }
