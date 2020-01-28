@@ -63,8 +63,8 @@ map <- spTransform(map, "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
 map <- sp::merge(map,overall_sc, by.x="ccg18cd", by.y="ccg_cd")
 
 outcomes<-data.frame(var=c("perc_budget","spend_YP","perc_access","avg_wait","perc_closed","overall_score"),
-                     lb=c("% of CCG budget spent on CAMHS","Spend per child (&#163) on CAMHS","% of children referred to CAMHS",
-                          "Average waiting time (days)","% of CAMHS referrals closed before treatment","CCG overall score"),stringsAsFactors = F)
+                     lb=c("% of CCG budget spent on CYPMHS","Spend per child (&#163) on CYPMHS","% of children referred to CYPMHS",
+                          "Average waiting time (days)","% of CYPMHS referrals closed before treatment","CCG overall score"),stringsAsFactors = F)
 
 require(ggplot2)
 require(RColorBrewer)
@@ -116,25 +116,25 @@ leaflet(data=map, options = leafletOptions(backgroun="#FFF")) %>%
   addPolygons(color="#444444", weight=1, smoothFactor = 0.5,
               opacity=1.0, fillOpacity = 0.7, fillColor = ~pal(avg_wait_fill),
               popupOptions = highlightOptions(bringToFront = T, weight=4),
-              label =labels[["avg_wait"]],group="Average CAMHS waiting time (days)") %>%
+              label =labels[["avg_wait"]],group="Average CYPMHS waiting time (days)") %>%
   
   addPolygons(color="#444444", weight=1, smoothFactor = 0.5,
               opacity=1.0, fillOpacity = 0.7, fillColor = ~pal(perc_access_fill),
               popupOptions = highlightOptions(bringToFront = T, weight=4),
-              label =labels[["perc_access"]],group="% of children referred to CAMHS") %>%
+              label =labels[["perc_access"]],group="% of children referred to CYPMHS") %>%
   
   addPolygons(color="#444444", weight=1, smoothFactor = 0.5,
               opacity=1.0, fillOpacity = 0.7, fillColor = ~pal_bin(spend_YP_fill),
               popupOptions = highlightOptions(bringToFront = T, weight=4),
-              label =labels[["spend_YP"]],group="CAMHS spend per child") %>%
+              label =labels[["spend_YP"]],group="CYPMHS spend per child") %>%
   
   addPolygons(color="#444444", weight=1, smoothFactor = 0.5,
               opacity=1.0, fillOpacity = 0.7, fillColor = ~pal(perc_budget_fill),
               popupOptions = highlightOptions(bringToFront = T, weight=4),
-              label =labels[["perc_budget"]],group="% of CCG budget spent on CAMHS") %>%
+              label =labels[["perc_budget"]],group="% of CCG budget spent on CYPMHS") %>%
   
   addLayersControl(
-    baseGroups = c("CCG overall score","% of referrals closed without treatment","Average CAMHS waiting time (days)","% of children referred to CAMHS","CAMHS spend per child","% of CCG budget spent on CAMHS"),
+    baseGroups = c("CCG overall score","% of referrals closed without treatment","Average CYPMHS waiting time (days)","% of children referred to CYPMHS","CYPMHS spend per child","% of CCG budget spent on CYPMHS"),
     options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend("topleft", pal = pal, values = seq(0,1),bins=5,
             labFormat = function(type, cuts, p) { 
@@ -191,7 +191,7 @@ maxVals<-sapply(c("overall_score","perc_closed","avg_wait","perc_access","spend_
      }
    }) 
 
-varVals<-c("CCG overall score</br>Lower = worse","% of referrals closed</br>without treatment","Average CAMHS waiting time (days)","% of children referred to CAMHS","CAMHS spend per child","% of CCG budget</br>spent on CAMHS")
+varVals<-c("CCG overall score</br>Lower = worse","% of referrals closed</br>without treatment","Average CYPMHS waiting time (days)","% of children referred to CYPMHS","CYPMHS spend per child","% of CCG budget</br>spent on CYPMHS")
 
 minVals<-jsonlite::toJSON(minVals,"values")
 
@@ -254,7 +254,7 @@ f3 = function(){
 
   var varval_var = this.getAttribute("varval_map")
 
-  if(varval_var != "CAMHS spend per child") {
+  if(varval_var != "CYPMHS spend per child") {
 
   var legend_2 = document.getElementsByClassName("info legend leaflet-control")[1]
 
